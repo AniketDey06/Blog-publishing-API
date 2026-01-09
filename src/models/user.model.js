@@ -6,21 +6,22 @@ import { AvailableUserRoles, UserRoleEnum } from "../utils/constans.js";
 const userSchema = new Schema({
     name: {
         type: String,
-        require: true,
+        required: true,
         trim: true,
     },
     email: {
         type: String,
-        require: true,
+        required: true,
     },
     password: {
         type: String,
-        require: true,
+        required: true,
     },
     role: {
         type: String,
         emun: AvailableUserRoles,
-        default: UserRoleEnum.USER
+        default: UserRoleEnum.USER,
+        required: true,
     }
 }, { timestamps: true })
 
@@ -52,7 +53,7 @@ userSchema.methods.generateAccessToken = function () {
 userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
-            _id: this.id,
+            _id: this._id,
         },
         process.env.REFRESH_TOKEN_SECRET,
         {

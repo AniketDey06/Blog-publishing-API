@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { getUserByEmail, getUserById, loginUserService, registerNewUser } from "../services/auth.services.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyns-handler.js";
@@ -21,24 +22,22 @@ const generateAccessAndRefeshTokens = async (userId) => {
 }
 
 export const registerUser = asyncHandler(async (req, res) => {
+    console.log(req.body);
+    
     const validationResult = await registerPostRequstBodySchema.safeParseAsync(req.body)
 
-    if (!validationResult) {
-        return res.status(400).json({ error: validationResult.error })
+    if (!validationResult.success) {
+        return res.status(400).json({ error: validationResult.error.format() })
     }
 
     const { name, email, password } = validationResult.data
 
-    const existingUser = await User.findOne({ email: email })
+    const existingUser =await getUserByEmail({email});
     if (existingUser) {
         throw new ApiError(400, "User is already there is the DB")
     }
-
-    const createdUser = await User.create({
-        name,
-        email,
-        password,
-    })
+    
+    const createdUser = await registerNewUser({name, email, password})
 
     return res
         .status(201)
@@ -54,17 +53,17 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const loginUser = asyncHandler(async (req, res) => {
     const validationResult = await loginPostRequstBodySchema.safeParseAsync(req.body)
 
-    if (!validationResult) {
+    if (!validationResult.success) {
         return res.status(400).json({ error: validationResult.error })
     }
 
     const { email, password } = validationResult.data
-    const user = await User.findOne({ email })
+    const user = await getUserByEmail({ email })
     if (!user) {
         throw new ApiError(404, "User not found")
     }
 
-    const isPasswordValid = await user.isPasswordCorrect(password)
+    const { isPasswordValid } = await loginUserService({user, password})
     if (!isPasswordValid) {
         throw new ApiError(401, "Invalid Password")
     }
@@ -91,7 +90,7 @@ export const loginUser = asyncHandler(async (req, res) => {
 export const getCurrentUser = asyncHandler(async (req, res) => {
     const userID = req.user.id
 
-    const user = await User.findById(userID)
+    const user = await getUserById(userID)
     if (!user) {
         throw new ApiError(404, "user not foud")
     }
