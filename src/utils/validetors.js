@@ -10,3 +10,8 @@ export const loginPostRequstBodySchema = z.object({
     email: z.string(),
     password: z.string(),
 })
+
+export const createPostRequstBodySchema = z.object({
+    title: z.string().min(3),
+    description: z.string().min(3),
+})

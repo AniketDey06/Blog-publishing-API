@@ -1,35 +1,30 @@
 import { Post } from "../models/post.model.js";
+import { createPost } from "../services/post.service.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyns-handler.js";
-
+import { createPostRequstBodySchema } from "../utils/validetors.js";
 
 export const createNewPost = asyncHandler(async (req, res) => {
-    const {title, description} = req.body
-
-    if (!title || !description) {
-        throw new ApiError(404, "All field are requird")
+    const validationResult = await createPostRequstBodySchema.safeParseAsync(req.body)
+    if (!validationResult.success) {
+        return res.status(400).json({ error: validationResult.error })
     }
 
-    const createdPost = await Post.create({
-        title,
-        description,
-        createdBy: req.user._id,
-    })
-
-    createdPost.save()
+    const { title, description } = validationResult.data
+    const createdPost = await createPost({ title, description, author: req.user._Id })
 
     return res
-    .status(201)
-    .json(
-        new ApiResponse(
-            201,
-            createdPost,
-            "Post created successfully"
+        .status(201)
+        .json(
+            new ApiResponse(
+                201,
+                createdPost,
+                "Post created successfully"
+            )
         )
-    )
 })
 
 export const getAllPost = asyncHandler(async (req, res) => {
-    
+
 })

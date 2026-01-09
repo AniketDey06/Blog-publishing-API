@@ -1,5 +1,5 @@
 import { User } from "../models/user.model.js";
-import { getUserByEmail, getUserById, loginUserService, registerNewUser } from "../services/auth.services.js";
+import { getUserByEmail, getUserById, loginUserService, registerNewUser } from "../services/auth.service.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyns-handler.js";
