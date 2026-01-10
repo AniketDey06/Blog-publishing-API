@@ -20,3 +20,8 @@ export const publishedPost = async () => {
 
     return posts
 }
+
+export const getPostById = async(postID) => {
+    const post = await Post.findById(postID)
+    return post
+}

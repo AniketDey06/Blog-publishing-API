@@ -1,8 +1,9 @@
 import { Post } from "../models/post.model.js";
-import { createPost, publishedPost } from "../services/post.service.js";
+import { createPost, getPostById, publishedPost } from "../services/post.service.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyns-handler.js";
+import { BlogStatusEnum } from "../utils/constans.js";
 import { createPostRequstBodySchema } from "../utils/validetors.js";
 
 export const createNewPost = asyncHandler(async (req, res) => {
@@ -42,3 +43,27 @@ export const getAllPublishedPost = asyncHandler(async (req, res) => {
             )
         )
 })
+
+export const getPublishedPostById = asyncHandler(async (req, res) => {
+    const postID = req.params.id
+
+    const post = await getPostById(postID)
+    if (!post) {
+        throw new ApiError(404, "Blog not found")
+    }
+
+    if (post.status !== BlogStatusEnum.APPROVE) {
+        throw new ApiError(400, "Blog have not APPROVED yet.")
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                post,
+                "this Blog post have approved."
+            )
+        )
+})
+
