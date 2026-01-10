@@ -6,9 +6,9 @@ export const UserRoleEnum = {
 export const AvailableUserRoles = Object.values(UserRoleEnum)
 
 export const BlogStatusEnum = {
-    APPROVE: "APPROVE",
+    APPROVED: "APPROVED",
     PENDING: "PENDING",
-    REJECT: "REJECT"
+    REJECTED: "REJECTED"
 }
 
 export const AvailableBlogStatus = Object.values(BlogStatusEnum)

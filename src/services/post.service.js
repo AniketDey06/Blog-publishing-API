@@ -15,7 +15,7 @@ export const createPost = async ({title, description, author }) => {
 
 export const publishedPost = async () => {
     const posts = await Post.find({
-        status: BlogStatusEnum.APPROVE
+        status: BlogStatusEnum.APPROVED
     })
 
     return posts
@@ -37,5 +37,5 @@ export const updatePost = async ({title, description, postId}) => {
             new: true
         }
     )
-    return updatePost
+    return updatedPost
 }

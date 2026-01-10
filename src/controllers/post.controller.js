@@ -13,7 +13,7 @@ export const createNewPost = asyncHandler(async (req, res) => {
     }
 
     const { title, description } = validationResult.data
-    const createdPost = await createPost({ title, description, author: req.user._Id })
+    const createdPost = await createPost({ title, description, author: req.user._id })
 
     return res
         .status(201)
@@ -52,7 +52,7 @@ export const getPublishedPostById = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Blog not found")
     }
 
-    if (post.status !== BlogStatusEnum.APPROVE) {
+    if (post.status !== BlogStatusEnum.APPROVED) {
         throw new ApiError(400, "Blog have not APPROVED yet.")
     }
 
@@ -71,8 +71,8 @@ export const updatePostById = asyncHandler(async (req, res) => {
     const postID = req.params.id
 
     const post = await getPostById(postID)
-    if (!post) {
-        throw new ApiError(404, "Blog not found")
+    if (!post || post.status === BlogStatusEnum.APPROVED) {
+        throw new ApiError(404, "Blog not found or Its APPROVED")
     }
 
     const userId = req.user.id
@@ -101,3 +101,4 @@ export const updatePostById = asyncHandler(async (req, res) => {
             )
         )
 })
+
