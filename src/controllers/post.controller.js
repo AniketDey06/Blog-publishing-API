@@ -1,5 +1,5 @@
 import { Post } from "../models/post.model.js";
-import { createPost, getPostById, publishedPost, updatePost } from "../services/post.service.js";
+import { createPost, deletePost, getPostById, publishedPost, updatePost } from "../services/post.service.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyns-handler.js";
@@ -102,3 +102,30 @@ export const updatePostById = asyncHandler(async (req, res) => {
         )
 })
 
+export const deletePostById = asyncHandler(async (req, res) => {
+    const postId = req.params.id
+
+    const post = await getPostById(postId)
+    if (!post || post.status === BlogStatusEnum.APPROVED) {
+        throw new ApiError(404, "Blog not found or Its APPROVED")
+    }
+    
+    const userId = req.user._id
+    console.log(userId);
+    console.log(post.createdBy);
+    
+    if(!post.createdBy.equals(userId)){
+        throw new ApiError(400, "This user have not created this blog post")
+    }
+
+    const deletedPost = await deletePost(postId)
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                202,
+                deletedPost,
+                "this Blog post have been updated"
+            )
+        )
+})

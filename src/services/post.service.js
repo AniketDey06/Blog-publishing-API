@@ -39,3 +39,8 @@ export const updatePost = async ({title, description, postId}) => {
     )
     return updatedPost
 }
+
+export const deletePost = async (postId) => {
+    const deletedPost = await Post.findByIdAndDelete(postId)
+    return deletedPost
+}

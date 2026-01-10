@@ -2,6 +2,7 @@ import { Router } from "express";
 import { jwtVerify } from "../middlewares/auth.middleware.js";
 import {
     createNewPost,
+    deletePostById,
     getAllPublishedPost,
     getPublishedPostById,
     updatePostById
@@ -18,5 +19,6 @@ router.route('/')
 router.route('/:id')
     .get(getPublishedPostById)
     .put(updatePostById)
+    .delete(deletePostById)
 
 export default router
