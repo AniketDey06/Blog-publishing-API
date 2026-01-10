@@ -25,3 +25,17 @@ export const getPostById = async(postID) => {
     const post = await Post.findById(postID)
     return post
 }
+
+export const updatePost = async ({title, description, postId}) => {
+    const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        {
+            title: title,
+            description: description
+        },
+        {
+            new: true
+        }
+    )
+    return updatePost
+}

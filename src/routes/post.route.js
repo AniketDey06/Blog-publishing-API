@@ -3,7 +3,8 @@ import { jwtVerify } from "../middlewares/auth.middleware.js";
 import {
     createNewPost,
     getAllPublishedPost,
-    getPublishedPostById
+    getPublishedPostById,
+    updatePostById
 } from "../controllers/post.controller.js";
 
 const router = Router()
@@ -16,6 +17,6 @@ router.route('/')
 
 router.route('/:id')
     .get(getPublishedPostById)
-    .put()
+    .put(updatePostById)
 
 export default router
