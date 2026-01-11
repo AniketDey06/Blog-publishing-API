@@ -29,15 +29,18 @@ export const jwtVerify = asyncHandler(async (req, res, next) => {
 
 export const checkRole = (role = []) => (async (req, res, next) => {
     const user = req.user
+
+
     if (!user) {
         throw new ApiError(400, "User should loged in")
     }
-    
+
     const userdata = await getUserById(user._id)
+
     if (!userdata) {
         throw new ApiError(400, "No user found in the DB")
     }
-    
+
     if (!role.includes(userdata.role)) {
         throw new ApiError(400, "You do not have permissinon to perforn this action")
     }

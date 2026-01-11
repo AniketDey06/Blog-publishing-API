@@ -9,9 +9,7 @@ export const getUserByEmail = async ({ email }) => {
 
 export const getUserById = async (userId) => {
     const user = await User.findById(userId)
-    console.log(user);
-
-    return { user }
+    return user 
 }
 
 export const registerNewUser = async ({ name, email, password }) => {

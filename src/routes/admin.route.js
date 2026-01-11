@@ -8,7 +8,7 @@ const router = Router()
 router.use(jwtVerify, checkRole([UserRoleEnum.ADMIN]))
 
 router.route('/user/:id')
-    .post()
+    // .post()
 
 router.route('/posts')
     .get(getAllPendingPost)
