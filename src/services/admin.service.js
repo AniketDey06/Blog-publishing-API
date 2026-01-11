@@ -19,3 +19,17 @@ export const pendingPosts = async () => {
     const posts = await Post.find({status: BlogStatusEnum.PENDING})
     return posts
 }
+
+export const updateStatus = async ({postId, status}) => {
+    const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        {
+            status: status
+        },
+        {
+            new: true
+        }
+    )
+
+    return updatedPost
+}
